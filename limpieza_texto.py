@@ -64,3 +64,66 @@ print("\nPalabras TF-IDF:\n")
 print(vectorizer_tfidf.get_feature_names_out())
 
 print("\nProceso terminado correctamente.")
+
+from gensim.models import Word2Vec
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+tokens = texto_lematizado.split()
+
+sentencias = [tokens]
+
+modelo_w2v = Word2Vec(
+    sentencias,
+    vector_size=100,
+    window=5,
+    min_count=1,
+    workers=4
+)
+
+print("\nModelo Word2Vec entrenado correctamente.")
+
+
+
+palabras = list(modelo_w2v.wv.index_to_key)[:20]
+
+vectores = [modelo_w2v.wv[palabra] for palabra in palabras]
+
+
+
+pca = PCA(n_components=2)
+
+resultado = pca.fit_transform(vectores)
+
+
+
+plt.figure(figsize=(10,8))
+
+for i, palabra in enumerate(palabras):
+    plt.scatter(resultado[i,0], resultado[i,1])
+    plt.text(resultado[i,0]+0.01, resultado[i,1]+0.01, palabra)
+
+plt.title("Espacio Vectorial Word2Vec")
+plt.savefig("grafica_word2vec.png")
+
+print("\nImagen grafica_word2vec.png guardada.")
+
+
+
+
+plt.figure(figsize=(10,8))
+
+x = resultado[:,0]
+y = resultado[:,1]
+
+plt.plot(x, y, 'o')
+
+for i, palabra in enumerate(palabras):
+    plt.text(x[i]+0.01, y[i]+0.01, palabra)
+
+plt.title("Representación Semántica del Texto")
+plt.savefig("grafica_semantica.png")
+
+print("Imagen grafica_semantica.png guardada.")
