@@ -4,18 +4,16 @@ import re
 import nltk
 import spacy
 
-# Descargar recursos de nltk
+
 nltk.download('punkt')
 
-# Cargar modelo en español
 nlp = spacy.load("es_core_news_sm")
 
-# Leer archivo txt
-with open("libro.txt", "r", encoding="utf-8") as archivo:
+with open("libro.txt", "r", encoding="latin-1") as archivo:
     texto = archivo.read()
 
-
 texto = texto.lower()
+
 
 texto = re.sub(r'\d+', '', texto)
 
@@ -36,8 +34,32 @@ texto_lematizado = " ".join(lemmas)
 print("\n\nTexto lematizado:\n")
 print(texto_lematizado[:500])
 
-
+# Guardar texto limpio
 with open("texto_limpio.txt", "w", encoding="utf-8") as salida:
     salida.write(texto_lematizado)
+
+
+documentos = [texto_lematizado]
+
+vectorizer_count = CountVectorizer()
+
+X_count = vectorizer_count.fit_transform(documentos)
+
+print("\nVectorización CountVectorizer:\n")
+print(X_count.toarray())
+
+print("\nPalabras detectadas:\n")
+print(vectorizer_count.get_feature_names_out())
+
+
+vectorizer_tfidf = TfidfVectorizer()
+
+X_tfidf = vectorizer_tfidf.fit_transform(documentos)
+
+print("\nVectorización TF-IDF:\n")
+print(X_tfidf.toarray())
+
+print("\nPalabras TF-IDF:\n")
+print(vectorizer_tfidf.get_feature_names_out())
 
 print("\nProceso terminado correctamente.")
