@@ -14,28 +14,18 @@ nlp = spacy.load("es_core_news_sm")
 with open("libro.txt", "r", encoding="utf-8") as archivo:
     texto = archivo.read()
 
-# -----------------------------
-# NORMALIZACIÓN
-# -----------------------------
 
-# Convertir a minúsculas
 texto = texto.lower()
 
-# Eliminar números
 texto = re.sub(r'\d+', '', texto)
 
-# Eliminar caracteres especiales
 texto = re.sub(r'[^\w\s]', '', texto)
 
-# Eliminar espacios extra
 texto = re.sub(r'\s+', ' ', texto).strip()
 
 print("Texto normalizado:\n")
 print(texto[:500])
 
-# -----------------------------
-# LEMATIZACIÓN
-# -----------------------------
 
 doc = nlp(texto)
 
@@ -46,7 +36,7 @@ texto_lematizado = " ".join(lemmas)
 print("\n\nTexto lematizado:\n")
 print(texto_lematizado[:500])
 
-# Guardar resultado
+
 with open("texto_limpio.txt", "w", encoding="utf-8") as salida:
     salida.write(texto_lematizado)
 
